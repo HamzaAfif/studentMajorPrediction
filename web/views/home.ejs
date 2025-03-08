@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #3b82f6;
+            --primary-dark: #2563eb;
+            --secondary-color: #64748b;
+            --background-color: #f1f5f9;
+            --sidebar-bg: #1e293b;
+            --card-bg: #ffffff;
+            --text-color: #334155;
+            --text-light: #94a3b8;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: var(--sidebar-bg);
+            color: white;
+            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-logo {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .sidebar-menu {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-menu a {
+            color: var(--text-light);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .sidebar-menu a svg {
+            margin-right: 0.75rem;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .dashboard-card {
+            background-color: var(--card-bg);
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            border-color: var(--primary-dark);
+        }
+
+        #updatesList li {
+            background-color: var(--background-color);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        #updatesList li:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 1rem;
+            }
+
+            .sidebar-menu {
+                display: flex;
+                overflow-x: auto;
+                margin-bottom: 1rem;
+            }
+
+            .sidebar-menu li {
+                margin-right: 0.5rem;
+                margin-bottom: 0;
+            }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-logo">HEM ES</div>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="#dashboard" class="active" data-section="dashboard">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="#users" data-section="users">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                        Profile
+                    </a>
+                </li>
+                <li>
+                    <a href="#analytics" data-section="analytics">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"></path><path d="m19 9-5 5-4-4-3 3"></path></svg>
+                        Analytics
+                    </a>
+                </li>
+                <li>
+                    <a href="#reports" data-section="reports">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                        Reports
+                    </a>
+                </li>
+                
+            </ul>
+        </aside>
+
+
+        <main class="main-content">
+            <section id="dashboard" class="section" style="display: block;">
+                <div class="dashboard-header">
+                    <h1 class="dashboard-title">Dashboard</h1>
+                    <form id="logoutForm" action="/logout" method="POST">
+                        <button type="submit" class="btn btn-outline-danger">Logout</button>
+                    </form>
+                </div>
+    
+                
+
+                <div class="dashboard-card">
+                    <h2 class="h4 mb-4">Your Notes</h2>
+                    <form id="notesForm" class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label for="math" class="form-label">Math Note:</label>
+                            <input type="number" id="math" name="math" class="form-control" required value="<%= notes.math || '' %>">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="physics" class="form-label">Physics Note:</label>
+                            <input type="number" id="physics" name="physics" class="form-control" required value="<%= notes.physics || '' %>">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="chemistry" class="form-label">Chemistry Note:</label>
+                            <input type="number" id="chemistry" name="chemistry" class="form-control" required value="<%= notes.chemistry || '' %>">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="art" class="form-label">Art Note:</label>
+                            <input type="number" id="art" name="art" class="form-control" required value="<%= notes.art || '' %>">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="economics" class="form-label">Economics Note:</label>
+                            <input type="number" id="economics" name="economics" class="form-control" required value="<%= notes.economics || '' %>">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="preference" class="form-label">Preference:</label>
+                            <select id="preference" name="preference" class="form-select" required>
+                                <option value="" disabled selected>Select a preference</option>
+                                <option value="0" <%= notes.preference == '0' ? 'selected' : '' %>>Arts</option>
+                                <option value="1" <%= notes.preference == '1' ? 'selected' : '' %>>Business</option>
+                                <option value="2" <%= notes.preference == '2' ? 'selected' : '' %>>Design</option>
+                                <option value="3" <%= notes.preference == '3' ? 'selected' : '' %>>Engineering</option>
+                                <option value="4" <%= notes.preference == '4' ? 'selected' : '' %>>Science</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary">Submit Notes</button>
+                        </div>
+                    </form>
+                </div>
+                
+    
+                <div class="dashboard-card">
+                    
+
+                    <h1>
+                        Report
+                    </h1>
+                    <div
+                        id="llmReplyContainer"
+                        style="
+                            font-family: 'Arial', sans-serif; 
+                            background: #ffffff; 
+                            border-radius: 10px; 
+                            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+                            padding: 20px; 
+                            max-width: 900px; 
+                            margin: 0 auto; 
+                            line-height: 1.8; 
+                            color: #34495e;">
+                    </div>
+                
+                    <script>
+    
+                        const rawLlmReply = `<%- llmReply %>`;
+    
+                        const parsedLlmReply = marked.parse(rawLlmReply);
+    
+                        document.getElementById('llmReplyContainer').innerHTML = parsedLlmReply;
+                    </script>
+
+                </div>
+                
+            </section>
+            
+
+            <section id="users" class="section" style="display: none;">
+                <h1>Manage Your Account</h1>
+            
+                <form action="/update-account" method="POST">
+                    <div>
+                        <label for="firstName">First Name:</label>
+                        <input type="text" id="firstName" name="firstName" value="<%= user.firstName %>" required>
+                    </div>
+                    <div>
+                        <label for="lastName">Last Name:</label>
+                        <input type="text" id="lastName" name="lastName" value="<%= user.lastName %>" required>
+                    </div>
+                    <div>
+                        <label for="school">School:</label>
+                        <input type="text" id="school" name="school" value="<%= user.school %>" required>
+                    </div>
+                    <div>
+                        <label for="birthDate">Birth Date:</label>
+                        <input type="date" id="birthDate" name="birthDate" value="<%= user.birthDate %>" required>
+                    </div>
+                    <div>
+                        <button type="submit">Save Changes</button>
+                    </div>
+                </form>
+            </section>
+            
+
+            <section id="analytics" style="display: none;">
+                <h2 class="h4 mb-4">Analytics</h2>
+                <div class="analytics-plots">
+                    <% if (plots && Object.keys(plots).length > 0) { %>
+                        <% Object.entries(plots).forEach(([plotName, plotPath]) => { %>
+                            <div class="plot-card">
+                                <h3 class="plot-title"><%= plotName.replace(/_/g, ' ').toUpperCase() %></h3>
+                                <div class="plot-image-container">
+                                    <img src="<%= plotPath %>" alt="<%= plotName %>" class="plot-image" />
+                                </div>
+                                <p class="plot-path"><%= plotPath %></p>
+                            </div>
+                        <% }); %>
+                    <% } else { %>
+                        <p class="no-plots-message">No plots available to display.</p>
+                    <% } %>
+                </div>
+            </section>
+            
+            
+            <div id="imageModal" class="modal">
+                <span class="close-btn" id="closeModal">&times;</span>
+                <img class="modal-content" id="modalImage" />
+                <div id="modalCaption"></div>
+            </div>
+            
+        
+            <style>
+                .analytics-plots {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                    gap: 30px;
+                    justify-content: center;
+                    padding: 20px;
+                }
+            
+                .plot-card {
+                    background-color: var(--card-bg);
+                    border-radius: var(--border-radius);
+                    box-shadow: 0 1px 3px var(--hover-shadow);
+                    padding: 1rem;
+                    display: flex;
+                    flex-direction: column;
+                    transition: transform var(--transition), box-shadow var(--transition);
+                }
+            
+                .plot-card:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 4px 8px var(--hover-shadow);
+                }
+            
+                .plot-title {
+                    font-size: 1.2rem;
+                    font-weight: 600;
+                    color: var(--primary-color);
+                    margin-bottom: 0.75rem;
+                    text-transform: capitalize;
+                    letter-spacing: 0.5px;
+                }
+            
+                .plot-image-container {
+                    flex-grow: 1;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    overflow: hidden;
+                    border-radius: 0.5rem;
+                    background-color: var(--background-color);
+                    margin-bottom: 15px;
+                    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+                    cursor: pointer;
+                }
+            
+                .plot-image {
+                    width: 100%;
+                    height: auto;
+                    object-fit: contain;
+                    transition: transform var(--transition);
+                }
+            
+                .plot-image-container:hover .plot-image {
+                    transform: scale(1.05);
+                }
+            
+                .plot-path {
+                    font-size: 0.9rem;
+                    color: var(--text-light);
+                    margin-top: 0.5rem;
+                    word-break: break-word;
+                }
+            
+                .no-plots-message {
+                    grid-column: 1 / -1;
+                    text-align: center;
+                    color: var(--text-light);
+                    font-style: italic;
+                    font-size: 1.1rem;
+                }
+            
+                /* Modal Styling */
+                .modal {
+                    display: none;
+                    position: fixed;
+                    z-index: 1;
+                    left: 0;
+                    top: 0;
+                    width: 100%;
+                    height: 100%;
+                    overflow: auto;
+                    background-color: rgba(0, 0, 0, 0.7);
+                    padding-top: 60px;
+                    justify-content: center;
+                    align-items: center;
+                }
+            
+                .modal-content {
+                    margin: auto;
+                    display: block;
+                    max-width: 80%;
+                    max-height: 80%;
+                    width: auto;
+                    height: auto;
+                }
+            
+                #modalCaption {
+                    text-align: center;
+                    color: #fff;
+                    font-size: 1.2rem;
+                    padding: 10px;
+                }
+            
+                .close-btn {
+                    position: absolute;
+                    top: 15px;
+                    right: 35px;
+                    color: #fff;
+                    font-size: 40px;
+                    font-weight: bold;
+                    cursor: pointer;
+                }
+            
+                .close-btn:hover,
+                .close-btn:focus {
+                    color: #bbb;
+                    text-decoration: none;
+                    cursor: pointer;
+                }
+            
+                /* Responsive styles */
+                @media (max-width: 768px) {
+                    .plot-card {
+                        width: 100%;
+                    }
+            
+                    .plot-title {
+                        font-size: 1rem;
+                    }
+            
+                    .plot-image-container {
+                        margin-bottom: 10px;
+                    }
+                }
+            </style>
+            
+            <script>
+                function openModal(imagePath, caption) {
+                    const modal = document.getElementById("imageModal");
+                    const modalImg = document.getElementById("modalImage");
+                    const captionText = document.getElementById("modalCaption");
+            
+                    modal.style.display = "block";
+                    modalImg.src = imagePath;
+                    captionText.innerHTML = caption;
+            
+                    const closeModal = document.getElementById("closeModal");
+                    closeModal.onclick = function() {
+                        modal.style.display = "none";
+                    }
+                }
+            </script>
+            
+            <script>
+             
+                const modal = document.getElementById("imageModal");
+                const modalImg = document.getElementById("modalImage");
+                const captionText = document.getElementById("modalCaption");
+                const closeBtn = document.getElementById("closeModal");
+
+                const plotImages = document.querySelectorAll(".plot-image");
+                plotImages.forEach(image => {
+                    image.addEventListener("click", function () {
+                        modal.style.display = "block";
+                        modalImg.src = this.src; // Set modal image to the clicked image
+                        captionText.innerHTML = this.alt; // Display the alt text as caption
+                    });
+                });
+            
+                // When the close button is clicked, close the modal
+                closeBtn.addEventListener("click", function () {
+                    modal.style.display = "none";
+                });
+            
+                // Close the modal when clicking outside the modal content
+                window.addEventListener("click", function (event) {
+                    if (event.target === modal) {
+                        modal.style.display = "none";
+                    }
+                });
+            </script>
+            
+
+            <section id="reports" class="section" style="display: none;">
+                <h2 class="h4 mb-4">Prediction Report</h2>
+                <% if (predictionReport) { %>
+                    
+                    <div><%- predictionReport %></div>
+                <% } else { %>
+                    <p>No prediction report available.</p>
+                <% } %>
+
+            </section>
+            
+            
+        </main>
+    </div>
+
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+
+
+        const menuLinks = document.querySelectorAll('.sidebar-menu a');
+        const sections = document.querySelectorAll('.section');
+
+        menuLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+
+                // Remove active class and hide all sections
+                menuLinks.forEach(link => link.classList.remove('active'));
+                sections.forEach(section => section.style.display = 'none');
+
+                // Add active class to clicked link and show the corresponding section
+                link.classList.add('active');
+                const sectionId = link.getAttribute('data-section');
+                document.getElementById(sectionId).style.display = 'block';
+            });
+        });
+
+        const socket = io('http://127.0.0.1:3000'); 
+
+        socket.on('connect', () => {
+            console.log('Connected to Python WebSocket server');
+        });
+
+        socket.on('update', (data) => {
+            console.log('WebSocket received:', data); 
+        
+            if (data.message) {
+                const updatesList = document.getElementById('updatesList');
+                const newUpdate = document.createElement('li');
+                newUpdate.innerHTML = data.message; // Use the message directly
+                updatesList.insertBefore(newUpdate, updatesList.firstChild);
+        
+                newUpdate.style.opacity = '0';
+                setTimeout(() => {
+                    newUpdate.style.transition = 'opacity 0.5s ease';
+                    newUpdate.style.opacity = '1';
+                }, 10);
+            } else {
+                console.error('WebSocket message is missing or malformed:', data);
+            }
+        });
+        
+
+        const notesForm = document.getElementById('notesForm');
+
+        notesForm.addEventListener('submit', async (event) => {
+            event.preventDefault(); 
+        
+            const formData = {
+                math: document.getElementById('math').value,
+                physics: document.getElementById('physics').value,
+                chemistry: document.getElementById('chemistry').value,
+                art: document.getElementById('art').value,
+                economics: document.getElementById('economics').value,
+                preference: document.getElementById('preference').value,
+            };
+        
+            try {
+                
+                const response = await fetch('/submit-notes', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include', 
+                    body: JSON.stringify(formData),
+                });
+        
+                const result = await response.json();
+                console.log('Fetch Response:', result); 
+        
+                if (response.ok) {
+                    const predictedMajor = result.predicted_major;
+                    console.log('Predicted Major:', predictedMajor);
+
+                    const updatesList = document.getElementById('updatesList');
+                    const newUpdate = document.createElement('li');
+                    newUpdate.innerHTML = `<strong>Predicted Major: ${predictedMajor}</strong>`;
+                    updatesList.insertBefore(newUpdate, updatesList.firstChild);
+
+                    newUpdate.style.opacity = '0';
+                    setTimeout(() => {
+                        newUpdate.style.transition = 'opacity 0.5s ease';
+                        newUpdate.style.opacity = '1';
+                    }, 10);
+                } else {
+                    console.error('Error in fetch response:', result.error);
+                }
+            } catch (error) {
+                console.error('Error submitting form:', error);
+            }
+        });
+        
+        
+
+    </script>
+</body>
+</html>
+
